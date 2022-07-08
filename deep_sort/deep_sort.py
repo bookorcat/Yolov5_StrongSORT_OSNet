@@ -45,7 +45,7 @@ class DeepSort(object):
         # output bbox identities
         outputs = []
         for track in self.tracker.tracks:
-            if not track.is_confirmed() or track.time_since_update > 1:
+            if not track.is_confirmed() or track.time_since_update > 10:
                 continue
             if use_yolo_preds:
                 det = track.get_yolo_pred()

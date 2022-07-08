@@ -109,7 +109,11 @@ def detect(opt):
     if pt and device.type != 'cpu':
         model(torch.zeros(1, 3, *imgsz).to(device).type_as(next(model.model.parameters())))  # warmup
     dt, seen = [0.0, 0.0, 0.0, 0.0], 0
+
+
+
     for frame_idx, (path, img, im0s, vid_cap, s) in enumerate(dataset):
+  
         t1 = time_sync()
         img = torch.from_numpy(img).to(device)
         img = img.half() if half else img.float()  # uint8 to fp16/32
@@ -195,13 +199,14 @@ def detect(opt):
 
             # Stream results
             im0 = annotator.result()
-            if show_vid:
-                cv2.imshow(str(p), im0)
-                if cv2.waitKey(1) == ord('q'):  # q to quit
-                    raise StopIteration
+            if 1:
+                cv2.imshow("this", im0)
+                ch = cv2.waitKey()
+                if ch == 27 or ch == ord('q') or ch == ord("Q"):  # q to quit
+                    break
 
             # Save results (image with detections)
-            if save_vid:
+            if 0:
                 if vid_path != save_path:  # new video
                     vid_path = save_path
                     if isinstance(vid_writer, cv2.VideoWriter):
@@ -229,10 +234,10 @@ def detect(opt):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--yolo_model', nargs='+', type=str, default='yolov5m.pt', help='model.pt path(s)')
-    parser.add_argument('--deep_sort_model', type=str, default='osnet_x0_25')
-    parser.add_argument('--source', type=str, default='0', help='source')  # file/folder, 0 for webcam
+    parser.add_argument('--deep_sort_model', type=str, default='osnet_x1_0')
+    parser.add_argument('--source', type=str, default='/media/lc/Work1/lc/databank/ta_trackimgs', help='source')  # file/folder, 0 for webcam
     parser.add_argument('--output', type=str, default='inference/output', help='output folder')  # output folder
-    parser.add_argument('--imgsz', '--img', '--img-size', nargs='+', type=int, default=[640], help='inference size h,w')
+    parser.add_argument('--imgsz', '--img', '--img-size', nargs='+', type=int, default=[1280], help='inference size h,w')
     parser.add_argument('--conf-thres', type=float, default=0.3, help='object confidence threshold')
     parser.add_argument('--iou-thres', type=float, default=0.5, help='IOU threshold for NMS')
     parser.add_argument('--fourcc', type=str, default='mp4v', help='output video codec (verify ffmpeg support)')
@@ -240,7 +245,7 @@ if __name__ == '__main__':
     parser.add_argument('--show-vid', action='store_true', help='display tracking video results')
     parser.add_argument('--save-vid', action='store_true', help='save video tracking results')
     parser.add_argument('--save-txt', action='store_true', help='save MOT compliant results to *.txt')
-    # class 0 is person, 1 is bycicle, 2 is car... 79 is oven
+    # class 0 is person, 1 is bycicle, 2 is car... 79 is ov en
     parser.add_argument('--classes', nargs='+', type=int, help='filter by class: --class 0, or --class 16 17')
     parser.add_argument('--agnostic-nms', action='store_true', help='class-agnostic NMS')
     parser.add_argument('--augment', action='store_true', help='augmented inference')
@@ -258,3 +263,9 @@ if __name__ == '__main__':
 
     with torch.no_grad():
         detect(opt)
+
+
+
+
+# python track.py --show-vid 
+
